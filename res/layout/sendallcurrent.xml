@@ -1,0 +1,41 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+>
+<include android:id="@+id/topbar" layout="@layout/topbar" android:layout_alignParentTop="true"/>
+
+<ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_below="@+id/topbar">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+<TextView
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_marginTop="15dp"
+    android:text="This will send all your current browser bookmarks to your desktop browser."
+    android:autoLink="all"
+    android:gravity="center" />
+<TextView
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_marginTop="15dp"
+    android:text="This process may take a minute or two if you have a lot of bookmarks"
+    android:autoLink="all"
+    android:gravity="center" />
+
+<Button 
+    android:layout_marginTop="15dp"
+    android:id="@+id/but_sendall"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="Send all bookmarks" />
+        
+    </LinearLayout>
+</ScrollView>
+
+    
+</RelativeLayout>

@@ -1,0 +1,18 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/topbar" android:layout_height="45dp"
+	android:layout_width="fill_parent" android:background="#333"
+	android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
+	android:clickable="true">
+	<RelativeLayout android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:orientation="horizontal"
+		android:layout_centerInParent="true" >
+	
+		<TextView android:id="@+id/tv_carrier_title"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:textColor="#fff"
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:text="Bookmark to Desktop"
+			/>
+	</RelativeLayout>
+
+</RelativeLayout>

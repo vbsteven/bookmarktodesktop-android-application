@@ -1,0 +1,59 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bmtodesk="http://schemas.android.com/apk/res/be.vbsteven.bmtodesk"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+>
+<include android:id="@+id/topbar" layout="@layout/topbar" android:layout_alignParentTop="true"/>
+
+<ScrollView
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:padding="15dp"
+	android:layout_below="@+id/topbar">
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+<TextView
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:layout_marginTop="15dp"
+	android:text="Now that your account is setup. It is time to configure your desktop browser addon."
+	android:autoLink="all"/>
+<TextView
+	android:layout_marginTop="15dp"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:text="Currently only Google Chrome/Chromium and Mozilla Firefox are supported. You can find download links on \n\nhttp://bookmarktodesktop.appspot.com/addons"
+	android:autoText="true"
+	android:autoLink="all" />          
+	
+<TextView
+	android:layout_marginTop="15dp"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:text="Once your browser addon is setup you are ready to start sending links from your Android device to your desktop browser."
+	android:autoText="true"
+	android:autoLink="all" />
+	
+<TextView
+	android:layout_marginTop="15dp"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:text="You can do this by longpressing the url in your Android browser and selecting Share Page."
+	android:autoText="true"
+	android:autoLink="all" />  
+		
+	</LinearLayout>
+</ScrollView>
+
+<Button
+    android:id="@+id/but_finish"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="Finish intro"
+    android:layout_alignParentBottom="true"
+    />
+
+	
+</RelativeLayout>

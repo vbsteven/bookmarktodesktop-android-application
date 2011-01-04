@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+        android:title="Preferences"
+        android:key="GLOBAL"
+        >
+        <PreferenceCategory android:title="Account info">
+        
+        <EditTextPreference
+            android:key="USERNAME"
+            android:title="Username"
+            android:summary="Username for the service"
+            android:defaultValue=""
+            android:persistent="true"
+            android:enabled="true"
+            />
+         
+        <EditTextPreference
+            android:key="PASSWORD"
+            android:title="Password"
+            android:summary="Password for the service"
+            android:defaultValue=""
+            android:persistent="true"
+            android:enabled="true"
+            />
+        </PreferenceCategory>
+        <PreferenceCategory android:title="Flow options">
+        <CheckBoxPreference
+        	android:key="FASTSHARING"
+        	android:title="Fast bookmarking"
+        	android:summary="Don't ask for title, immediately send bookmark to server"
+        	android:defaultValue="false"
+        	android:enabled="true"
+        	android:persistent="true" />
+        <CheckBoxPreference
+        	android:key="HIDECONFIRMATION"
+        	android:title="Hide confirmation"
+        	android:summary="Don't show bookmark sent screen"
+        	android:defaultValue="false"
+        	android:enabled="true"
+        	android:persistent="true" />
+        <CheckBoxPreference
+        	android:key="BACKGROUNDSHARING"
+        	android:title="Share in the background"
+        	android:summary="You can continue browsing while the app is sending to the server"
+        	android:defaultValue="false"
+        	android:enabled="true"
+        	android:persistent="true" />
+        </PreferenceCategory>
+        
+        <PreferenceCategory android:title="Misc">
+        <Preference
+        	android:key="WATCHINTROVID"
+        	android:title="Watch introduction video"
+        	android:enabled="true"
+        	android:persistent="true" />
+                <Preference
+        	android:key="CREATEACC"
+        	android:title="Create new account"
+        	android:enabled="true"
+        	android:persistent="true" />
+        	
+        </PreferenceCategory>
+</PreferenceScreen>

@@ -1,0 +1,32 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+>
+<include android:id="@+id/topbar" layout="@layout/topbar" android:layout_alignParentTop="true"/>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:fillViewport="true" android:padding="10dp"
+	android:layout_below="@id/topbar"
+	>
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Title" />
+		<EditText android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@+id/et_title" />
+
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="URL" />
+		<EditText android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@+id/et_url" />
+
+		<Button android:id="@+id/but_send" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_gravity="bottom"
+			android:text="Send" />
+	</LinearLayout>
+</ScrollView>
+</RelativeLayout>

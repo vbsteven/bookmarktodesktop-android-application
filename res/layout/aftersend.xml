@@ -1,0 +1,56 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:bmtodesk="http://schemas.android.com/apk/res/be.vbsteven.bmtodesk"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+>
+<include android:id="@+id/topbar" layout="@layout/topbar" android:layout_alignParentTop="true"/>
+<ScrollView
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:layout_below="@+id/topbar"
+	android:layout_above="@+id/but_shareapp">
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+<TextView
+	android:id="@+id/tv1"
+	android:layout_below="@+id/topbar"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:layout_marginTop="15dp"
+	android:text="Bookmark sent!\n\nIf you have installed the correct extension in your browser then this bookmark will shortly show up in the bookmarktodesktop folder on your bookmarks bar."
+	android:gravity="center" />
+<TextView
+	android:layout_marginTop="15dp"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:text="Download links for the browser addons can be found on \n\nhttp://bookmarktodesktop.appspot.com/addons"
+	android:gravity="center"
+	android:autoText="true"
+	android:autoLink="all" />
+
+<Button 
+	android:id="@+id/but_shareapp"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_above="@+id/but_takemeback"
+	android:text="Share this app with your friends" />
+<Button 
+	android:id="@+id/but_takemeback"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_above="@+id/ad"
+	android:text="Take me back" />
+</LinearLayout>
+</ScrollView>
+<com.admob.android.ads.AdView     
+		   android:layout_alignParentBottom="true"
+           android:id="@+id/ad" 
+           android:layout_width="fill_parent" 
+           android:layout_height="wrap_content"
+           bmtodesk:backgroundColor="#FFFFFF"
+           bmtodesk:primaryTextColor="#000000"
+           bmtodesk:secondaryTextColor="#CCCCCC"
+  />                       
+</RelativeLayout>

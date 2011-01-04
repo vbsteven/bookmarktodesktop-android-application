@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+>
+<include android:id="@+id/topbar" layout="@layout/topbar" android:layout_alignParentTop="true"/>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:fillViewport="true" android:padding="15dp"
+	android:layout_below="@id/topbar"
+	>
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceSmall"
+			android:text="In order to use Bookmark to Desktop you will need to setup an account on our service. \n\nRemember your username and password as you will need to use these to configure the browser extension.\n\n" />
+
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Username" />
+		<EditText android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@+id/et_username"
+			android:singleLine="true"
+			 />
+
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium"
+			android:text="Password" />
+		<EditText android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@+id/et_password"
+			android:password="true"
+			android:singleLine="true"
+			 />
+		<CheckBox
+			android:id="@+id/cb_password"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="Show password" />
+		
+
+		<Button android:id="@+id/but_create" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_gravity="bottom"
+			android:text="Create account" />
+			
+		<Button android:id="@+id/but_login" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_gravity="bottom"
+			android:text="Login as existing user" />
+	</LinearLayout>
+</ScrollView>
+</RelativeLayout>
