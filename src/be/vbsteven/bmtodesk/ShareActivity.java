@@ -96,6 +96,7 @@ public class ShareActivity extends Activity {
 
 	private void sendToServer(final String title, final String url) {
 		if (Global.isBackgroundSharing(this)) {
+			Log.d(Global.TAG, "backgroundSharing is enabled, starting service");
 			Intent i = new Intent(this, BackgroundSharingService.class);
 			i.putExtra(Global.EXTRA_TITLE, title);
 			i.putExtra(Global.EXTRA_URL, url);
@@ -103,6 +104,7 @@ public class ShareActivity extends Activity {
 			finish();
 			return;
 		}
+		Log.d(Global.TAG, "backgroundsharing is not enabled");
 		
 		
 		showProgress();

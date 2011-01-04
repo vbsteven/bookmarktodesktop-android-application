@@ -53,7 +53,7 @@
         	android:title="Watch introduction video"
         	android:enabled="true"
         	android:persistent="true" />
-                <Preference
+        <Preference
         	android:key="CREATEACC"
         	android:title="Create new account"
         	android:enabled="true"

@@ -25,13 +25,15 @@
         
         <activity android:name=".SendAllCurrentBookmarksActivity"></activity>
 
-        <activity android:name=".WelcomeActivity"></activity>
         <activity android:name=".ConfigureAddonActivity"></activity>
+        
         
         <activity android:name="com.admob.android.ads.AdMobActivity" 
                   android:theme="@android:style/Theme.NoTitleBar.Fullscreen" 
                   android:configChanges="orientation|keyboard|keyboardHidden" 
                   /> 
+                  
+        <service android:name=".BackgroundSharingService" />
                   
 		<meta-data android:value="a14ce584fd4d37e" android:name="ADMOB_PUBLISHER_ID" />
     </application>

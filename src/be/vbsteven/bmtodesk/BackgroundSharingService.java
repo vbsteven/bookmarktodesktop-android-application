@@ -22,8 +22,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.EditText;
-import android.widget.Toast;
 
 public class BackgroundSharingService extends Service {
 	private static final String URL = "http://bookmarktodesktop.appspot.com/addbookmark";
@@ -49,6 +47,7 @@ public class BackgroundSharingService extends Service {
 		if (intent.hasExtra(Global.EXTRA_TITLE) && intent.hasExtra(Global.EXTRA_URL)) {
 			title = intent.getStringExtra(Global.EXTRA_TITLE);
 			url = intent.getStringExtra(Global.EXTRA_URL);
+			Log.d(Global.TAG, "started BackgroundSharingService with values " + title + " " + url);
 		} else {
 			stopSelf();
 			return;
@@ -119,7 +118,7 @@ public class BackgroundSharingService extends Service {
 		} else if (message.startsWith("INVALIDLOGIN")) {
 			showFailedSend("Authentication failed");
 		} else if (message.startsWith("SUCCESSFUL")) {
-			
+			showSuccessfulSend();
 			
 		} else if (message.startsWith("REQUESTFAILED")) {
 			showFailedSend("Please try again later or contact me on twitter @vbsteven");
@@ -132,7 +131,9 @@ public class BackgroundSharingService extends Service {
 	
 	private void showProgress() {
 		Notification n = new Notification(R.drawable.icon, "Sending bookmark to server...", System.currentTimeMillis());
-		n.setLatestEventInfo(this, "Bookmark to Desktop", "Sending bookmark to server...", null);
+		Intent i = new Intent(this, MainActivity.class); // contentintent is required. so redirect to mainpage
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 1, i, 0);
+		n.setLatestEventInfo(this, "Bookmark to Desktop", "Sending bookmark to server...", contentIntent);
 		nManager.notify(2, n);
 	}
 	
@@ -143,21 +144,23 @@ public class BackgroundSharingService extends Service {
 	
 	private void showFailedSend(String message) {
 		Notification n = new Notification(R.drawable.icon, "Sending bookmark failed", System.currentTimeMillis());
+		n.flags = Notification.FLAG_AUTO_CANCEL;
 		Intent i = new Intent(this, ShareActivity.class);
 		i.putExtra(Global.EXTRA_TITLE, title);
 		i.putExtra(Global.EXTRA_URL, url);
 		PendingIntent p = PendingIntent.getActivity(this, 4, i, 0);
-		n.setLatestEventInfo(this, "Sending bookmark failed", message, null);
+		n.setLatestEventInfo(this, "Sending bookmark failed", message, p);
 		nManager.notify(3, n);
 	}
 	
 	private void showSuccessfulSend() {
 		Notification n = new Notification(R.drawable.icon, "Sending bookmark successful", System.currentTimeMillis());
+		n.flags = Notification.FLAG_AUTO_CANCEL;
 		Intent i = new Intent(this, AfterSuccessfulSendActivity.class);
 		i.putExtra(Global.EXTRA_TITLE, title);
 		i.putExtra(Global.EXTRA_URL, url);
 		PendingIntent p = PendingIntent.getActivity(this, 4, i, 0);
-		n.setLatestEventInfo(this, "Bookmark to Desktop", "Sending bookmark successful", null);
+		n.setLatestEventInfo(this, "Bookmark to Desktop", "Sending bookmark successful", p);
 		nManager.notify(3, n);
 	}
 }
