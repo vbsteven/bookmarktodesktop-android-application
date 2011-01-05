@@ -4,6 +4,15 @@
       android:versionCode="10"
       android:versionName="0.4">
     <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
+
+    	<!--  simple activities -->
+    	<activity android:name=".RegistrationActivity" />
+        <activity android:name=".Preferences" />
+        <activity android:name=".AfterSuccessfulSendActivity" />
+        <activity android:name=".SendAllCurrentBookmarksActivity" />
+        <activity android:name=".ConfigureAddonActivity" />
+
+    	<!-- Main activity with intentfilter for application launcher -->
         <activity android:name=".MainActivity"
                   android:label="@string/app_name">
             <intent-filter>
@@ -11,9 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <activity android:name=".RegistrationActivity" />
-        <activity android:name=".Preferences" />
+
+        <!-- Shareactivity with intentfilter to catch "Share to" intent -->
         <activity android:name=".ShareActivity">
             <intent-filter>
 				<action android:name="android.intent.action.SEND" />
@@ -21,26 +29,20 @@
 				<data android:mimeType="text/plain" />
 			</intent-filter>
         </activity>
-        <activity android:name=".AfterSuccessfulSendActivity"></activity>
-        
-        <activity android:name=".SendAllCurrentBookmarksActivity"></activity>
 
-        <activity android:name=".ConfigureAddonActivity"></activity>
-        
-        
-        <activity android:name="com.admob.android.ads.AdMobActivity" 
-                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen" 
-                  android:configChanges="orientation|keyboard|keyboardHidden" 
-                  /> 
-                  
+		<!--  Service for sending bookmarks in the background -->
         <service android:name=".BackgroundSharingService" />
-                  
-		<meta-data android:value="a14ce584fd4d37e" android:name="ADMOB_PUBLISHER_ID" />
     </application>
+
     <uses-sdk android:minSdkVersion="3" />
+
+    <!-- permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
-	<supports-screens android:smallScreens="true"
+
+    <!-- support all screens in the Android market -->
+	<supports-screens 
+		android:smallScreens="true"
 		android:normalScreens="true"
 		android:largeScreens="true" />
 </manifest> 
