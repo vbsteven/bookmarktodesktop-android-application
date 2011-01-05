@@ -34,14 +34,4 @@
 	</LinearLayout>
 </ScrollView>
 
-<com.admob.android.ads.AdView     
-           android:layout_alignParentBottom="true"
-           android:id="@+id/ad" 
-           android:layout_width="fill_parent" 
-           android:layout_height="wrap_content"
-           bmtodesk:backgroundColor="#FFFFFF"
-           bmtodesk:primaryTextColor="#000000"
-           bmtodesk:secondaryTextColor="#CCCCCC"
-  />       
-	
 </RelativeLayout>
