@@ -8,23 +8,31 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+
+/**
+ * activity that shows post-sharing information
+ * 
+ * @author steven
+ */
 public class AfterSuccessfulSendActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(android.R.style.Theme_Light_NoTitleBar);
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.aftersend);
 
+		// setup back button
 		Button button = (Button) findViewById(R.id.but_takemeback);
 		button.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				finish();
+				finish(); // finish the activity so we go back to the previous one
 			}
 		});
 
+		// setup share button
+		// this sends an intent that allows the user to share the given text with his favorite app (twitter,facebook,mail,...)
 		button = (Button) findViewById(R.id.but_shareapp);
 		button.setOnClickListener(new OnClickListener() {
 
@@ -39,8 +47,8 @@ public class AfterSuccessfulSendActivity extends Activity {
 			}
 		});
 
+		// change the displayed text when this activity is started after a batch upload 
 		if (getIntent().hasExtra(Global.EXTRA_COUNT)) {
-			// we are called after a batch upload
 			int count = getIntent().getIntExtra(Global.EXTRA_COUNT, 0);
 			TextView tv = (TextView) findViewById(R.id.tv1);
 			tv.setText(count

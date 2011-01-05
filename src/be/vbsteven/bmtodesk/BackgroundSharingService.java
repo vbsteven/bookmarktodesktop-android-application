@@ -19,99 +19,107 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
+/**
+ * service that sends bookmarks to the server in the background 
+ * and keeps the user up to date through notifications
+ * 
+ * @author steven
+ */
 public class BackgroundSharingService extends Service {
+
 	private static final String URL = "http://bookmarktodesktop.appspot.com/addbookmark";
+
+	private NotificationManager nManager;
+
 	private String title = "";
 	private String url = "";
-	private String responseMessage = "";
-	private Handler handler;
-	private NotificationManager nManager;
 	
 	@Override
+	/**
+	 * not really used here
+	 */
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
 	
 	@Override
+	/**
+	 * starts the service and gets ready to send bookmark
+	 * 
+	 * this service is supposed to only get started once for every bookmark
+	 * so if onStart is called it means a new bookmark needs to be sent
+	 */
 	public void onStart(Intent intent, int startId) {
 		super.onStart(intent, startId);
-		
+
+		// init notification manager
 		nManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-		
-		handler = new Handler();
-		
+
 		if (intent.hasExtra(Global.EXTRA_TITLE) && intent.hasExtra(Global.EXTRA_URL)) {
 			title = intent.getStringExtra(Global.EXTRA_TITLE);
 			url = intent.getStringExtra(Global.EXTRA_URL);
 			Log.d(Global.TAG, "started BackgroundSharingService with values " + title + " " + url);
+
+			sendToServer(title, url);
 		} else {
+			// if we're not called with a title and url, stop the service
 			stopSelf();
 			return;
 		}
-		
-		sendToServer(title, url);
-		
 	}
 	
+	/**
+	 * sends the bookmark to the server in a POST request
+	 * 
+	 * @param title
+	 * @param url
+	 */
 	private void sendToServer(final String title, final String url) {
 		showProgress();
-		Thread thread = new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				String username = Global.getUsername(BackgroundSharingService.this);
-				String password = Global.getPassword(BackgroundSharingService.this);
-				doPost(username, password, title, url);
-			}
-		});
-		thread.start();
-	}
 
-	
-	public void doPost(String username, String password, String title, String url) {
+		String username = Global.getUsername(BackgroundSharingService.this);
+		String password = Global.getPassword(BackgroundSharingService.this);
+		String responseMessage;
+		
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpPost post = new HttpPost(URI.create(URL));
+
 			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
 			nameValuePairs.add(new BasicNameValuePair("username", username));
 			nameValuePairs.add(new BasicNameValuePair("password", password));
 			nameValuePairs.add(new BasicNameValuePair("title", title));
 			nameValuePairs.add(new BasicNameValuePair("url", url));
 			post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			HttpResponse response;
-			response = httpclient.execute(post);
+
+			HttpResponse response = httpclient.execute(post);
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					response.getEntity().getContent(), "UTF-8"));
 			responseMessage = reader.readLine();
-			handler.post(afterRequestRunnable);
 		} catch (Exception e) {
 			responseMessage = "REQUESTFAILED";
-			handler.post(afterRequestRunnable);
 		}
-
-	}
-	
-	private Runnable afterRequestRunnable = new Runnable() {
 		
-		@Override
-		public void run() {
-			hideProgress();
-			onRegistrationResult(responseMessage);
-		}
+		hideProgress();
+		onResult(responseMessage);
 	};
-	
-	private void onRegistrationResult(String message) {
-		Log.d(Global.TAG, "message: " + message);
+
+	/**
+	 * handles the result for the POST request
+	 * 
+	 * @param message the message returned from the POST request
+	 */
+	private void onResult(String message) {
+		
 		if (message == null) {
 			showFailedSend("Please try again later or contact me on twitter: @vbsteven");
 			return;
 		}
-		
+
 		if (message.startsWith("INVALIDENTRY")) {
 			showFailedSend("Please provide a title and a url");
 			return;
@@ -125,10 +133,14 @@ public class BackgroundSharingService extends Service {
 		} else {
 			showFailedSend("Please try again later or contact me on twitter @vbsteven");
 		}
-		
+
+		// no more use for this service, stop it
 		stopSelf();
 	}
-	
+
+	/**
+	 * shows the progress notification
+	 */
 	private void showProgress() {
 		Notification n = new Notification(R.drawable.icon, "Sending bookmark to server...", System.currentTimeMillis());
 		Intent i = new Intent(this, MainActivity.class); // contentintent is required. so redirect to mainpage
@@ -136,12 +148,20 @@ public class BackgroundSharingService extends Service {
 		n.setLatestEventInfo(this, "Bookmark to Desktop", "Sending bookmark to server...", contentIntent);
 		nManager.notify(2, n);
 	}
-	
+
+	/**
+	 * hides the progress notification(s)
+	 */
 	private void hideProgress() {
 		nManager.cancel(2);
 		nManager.cancel(3);
 	}
-	
+
+	/**
+	 * shows notification when the sending failed
+	 * 
+	 * @param message
+	 */
 	private void showFailedSend(String message) {
 		Notification n = new Notification(R.drawable.icon, "Sending bookmark failed", System.currentTimeMillis());
 		n.flags = Notification.FLAG_AUTO_CANCEL;
@@ -152,7 +172,10 @@ public class BackgroundSharingService extends Service {
 		n.setLatestEventInfo(this, "Sending bookmark failed", message, p);
 		nManager.notify(3, n);
 	}
-	
+
+	/**
+	 * shows notification when the sending succeeded
+	 */
 	private void showSuccessfulSend() {
 		Notification n = new Notification(R.drawable.icon, "Sending bookmark successful", System.currentTimeMillis());
 		n.flags = Notification.FLAG_AUTO_CANCEL;

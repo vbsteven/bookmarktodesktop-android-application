@@ -26,6 +26,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+/**
+ * activity that sends all current bookmarks in the android browser to the server
+ * 
+ * FIXME: this part was quickly hacked together because of high user demand
+ *        it could use a big cleanup + documentation
+ * 
+ * @author steven
+ */
 public class SendAllCurrentBookmarksActivity extends Activity {
 	
 	private ArrayList<Bookmark> queue = new ArrayList<SendAllCurrentBookmarksActivity.Bookmark>();

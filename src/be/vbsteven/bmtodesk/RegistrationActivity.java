@@ -22,7 +22,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -32,19 +31,29 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
 
+/**
+ * registration activity is presented when the user opens the app for the first time
+ * 
+ * given credentials can be used to create a new account or to login with an existing one
+ * 
+ * @author steven
+ */
 public class RegistrationActivity extends Activity {
+
+	private Handler handler;
 
 	private Button button;
 	private Dialog progress;
+
 	private String responseMessage = "";
-	private Handler handler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(android.R.style.Theme_Light_NoTitleBar);
 		super.onCreate(savedInstanceState);
-		handler = new Handler();
 		setContentView(R.layout.registration);
+
+		handler = new Handler();
 
 		button = (Button) findViewById(R.id.but_create);
 		button.setOnClickListener(new OnClickListener() {
@@ -53,8 +62,9 @@ public class RegistrationActivity extends Activity {
 			public void onClick(View v) {
 				register();
 			}
+
 		});
-		
+
 		button = (Button)findViewById(R.id.but_login);
 		button.setOnClickListener(new OnClickListener() {
 			
@@ -62,6 +72,7 @@ public class RegistrationActivity extends Activity {
 			public void onClick(View v) {
 				checkLogin();
 			}
+
 		});
 		
 		CheckBox cb = (CheckBox)findViewById(R.id.cb_password);
@@ -78,125 +89,157 @@ public class RegistrationActivity extends Activity {
 			}
 		});
 	}
-	
+
+	/**
+	 * checks if the given account is valid on the server
+	 */
 	private void checkLogin() {
-		final String username = ((TextView) findViewById(R.id.et_username))
-				.getText().toString();
-		final String password = ((TextView) findViewById(R.id.et_password))
-				.getText().toString();
+		final String username = ((TextView) findViewById(R.id.et_username)).getText().toString();
+		final String password = ((TextView) findViewById(R.id.et_password)).getText().toString();
 		
 		if (!checkInput(username, password)) {
 			return;
 		}
-		
+
 		showLoginProgress();
-		
+
+		// run in a separate thread to not block the UI thread with network I/O
 		Thread thread = new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				doPostForLoginCheck(username, password);
+				doLoginPost(username, password);
 			}
+
 		});
 		thread.start();
 	}
 
+	/**
+	 * registers the given account on the server
+	 */
 	private void register() {
-		final String username = ((TextView) findViewById(R.id.et_username)).getText()
-				.toString();
-		final String password = ((TextView) findViewById(R.id.et_password)).getText()
-				.toString();
+		final String username = ((TextView) findViewById(R.id.et_username)).getText().toString();
+		final String password = ((TextView) findViewById(R.id.et_password)).getText().toString();
 
 		if (!checkInput(username, password)) {
 			return;
 		}
-		
-		showProgress();
-		
+
+		showRegisterProgress();
+
+		// run in a separate thread to not block the UI thread with network I/O
 		Thread thread = new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				doPost(username, password);
+				doRegisterPost(username, password);
 			}
+
 		});
 		thread.start();
 	}
 
+	/**
+	 * validates if the given username and password are according to policy
+	 * 
+	 * @param username
+	 * @param password
+	 * @return true if the given credentials are valid for use
+	 */
 	private boolean checkInput(final String username, final String password) {
 		if (username.equals("") || password.equals("")) {
 			Utils.showMessage(this, "Validation error", "Please fill in all fields");
 			return false;
 		}
-		
+
 		if (username.contains(" ") || password.contains(" ")) {
 			Utils.showMessage(this, "Validation error", "Username and password cannot contain spaces");
 			return false;
 		}
-		
+
 		if (username.length() < 5 || password.length() < 5) {
 			Utils.showMessage(this, "Validation error", "Username and password have to be at least 5 characters long");
 			return false;
 		}
-		
+
 		return true;
 	}
 
-	public void doPost(String username, String password) {
+	/**
+	 * sends a POST request to the server for registration
+	 * 
+	 * the result will be put in responseMessage
+	 * 
+	 * @param username
+	 * @param password
+	 */
+	public void doRegisterPost(String username, String password) {
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpPost post = new HttpPost(URI.create("http://bookmarktodesktop.appspot.com/createuser"));
-			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
-					2);
+			
+			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("username", username));
 			nameValuePairs.add(new BasicNameValuePair("password", password));
 			post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			HttpResponse response;
-			response = httpclient.execute(post);
+			
+			HttpResponse response = httpclient.execute(post);
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					response.getEntity().getContent(), "UTF-8"));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
 			responseMessage = reader.readLine();
-			handler.post(afterRequestRunnable);
+			handler.post(afterRegisterRequestRunnable);
 		} catch (Exception e) {
 			responseMessage = "REQUESTFAILED";
-			handler.post(afterRequestRunnable);
+			handler.post(afterRegisterRequestRunnable);
 		}
-
 	}
-	
-	public void doPostForLoginCheck(String username, String password) {
+
+	/**
+	 * sends a POST request to the server for login
+	 * 
+	 * the result will be put in responseMessage
+	 * 
+	 * @param username
+	 * @param password
+	 */
+	public void doLoginPost(String username, String password) {
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpPost post = new HttpPost(URI.create("http://bookmarktodesktop.appspot.com/checklogin"));
-			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
-					2);
+
+			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("username", username));
 			nameValuePairs.add(new BasicNameValuePair("password", password));
 			post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			HttpResponse response;
-			response = httpclient.execute(post);
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					response.getEntity().getContent(), "UTF-8"));
+			HttpResponse response = httpclient.execute(post);
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
 			responseMessage = reader.readLine();
 			handler.post(afterLoginRequestRunnable);
 		} catch (Exception e) {
 			responseMessage = "REQUESTFAILED";
-			handler.post(afterRequestRunnable);
+			handler.post(afterRegisterRequestRunnable);
 		}
-
 	}
 
-	private Runnable afterRequestRunnable = new Runnable() {
+	/**
+	 * runnable to execute on the UI thread once the registration POST has finished
+	 */
+	private Runnable afterRegisterRequestRunnable = new Runnable() {
 
 		@Override
 		public void run() {
 			hideProgress();
 			onRegistrationResult(responseMessage);
 		}
+
 	};
-	
+
+	/**
+	 * runnable to execute on the UI thread once the login POST has finished
+	 */
 	private Runnable afterLoginRequestRunnable = new Runnable() {
 
 		@Override
@@ -204,60 +247,79 @@ public class RegistrationActivity extends Activity {
 			hideProgress();
 			onLoginResult(responseMessage);
 		}
+
 	};
-	
+
+	/**
+	 * handles the result form the login POST request
+	 * 
+	 * @param message
+	 */
 	private void onLoginResult(String message) {
-		Log.d(Global.TAG, "message: " + message);
-		
+
 		if (message == null) {
 			Utils.showMessage(this, "Login failed", "Please try again later or contact me on twitter @vbsteven");
 			return;
 		}
-		
+
 		if (message.startsWith("INVALIDLOGIN")) {
 			Utils.showMessage(this, "Username and password are invalid", "Please verify if they are correct or create a new account");
 			return;
 		}
-		
+
 		if (message.startsWith("SUCCESS")) {
-			String username = ((TextView) findViewById(R.id.et_username))
-					.getText().toString();
-			String password = ((TextView) findViewById(R.id.et_password))
-					.getText().toString();
+			String username = ((TextView) findViewById(R.id.et_username)).getText().toString();
+			String password = ((TextView) findViewById(R.id.et_password)).getText().toString();
+
 			Global.saveUsernameAndPassword(this, username, password);
-			showSuccessfulMessage(
-					"Login successful!", null);
+
+			showSuccessfulMessage("Login successful!", null);
 			return;
 		}
 	}
 
+	/**
+	 * handles the result from the registration POST request
+	 * 
+	 * @param message
+	 */
 	private void onRegistrationResult(String message) {
-		Log.d(Global.TAG, "message: " + message);
+
 		if (message == null) {
 			Utils.showMessage(this, "Account creation failed", "Please try again later or contact me on twitter @vbsteven");
 			return;
 		}
-		
+
 		if (message.startsWith("INVALIDINPUT")) {
 			Utils.showMessage(this, "Invalid input", "Please fill in all fields");
 			return;
-		} else if (message.startsWith("USERNAMEUNAVAILABLE")) {
-			Utils.showMessage(this, "Username not available",
-					"Please choose a different username");
-		} else if (message.startsWith("SUCCESSFUL")) {
-			String username = ((TextView) findViewById(R.id.et_username))
-					.getText().toString();
-			String password = ((TextView) findViewById(R.id.et_password))
-					.getText().toString();
-			Global.saveUsernameAndPassword(this, username, password);
-			showSuccessfulMessage("Account creation successful!", null);
-		} else if (message.startsWith("REQUESTFAILED")) {
-			Utils.showMessage(this, "Account creation failed", "Please try again later or contact me on twitter @vbsteven");
-		} else {
-			Utils.showMessage(this, "Account creation failed", "Please try again later or contact me on twitter @vbsteven");
 		}
+
+		if (message.startsWith("USERNAMEUNAVAILABLE")) {
+			Utils.showMessage(this, "Username not available","Please choose a different username");
+			return;
+		}
+
+		if (message.startsWith("SUCCESSFUL")) {
+			String username = ((TextView) findViewById(R.id.et_username)).getText().toString();
+			String password = ((TextView) findViewById(R.id.et_password)).getText().toString();
+
+			Global.saveUsernameAndPassword(this, username, password);
+
+			showSuccessfulMessage("Account creation successful!", null);
+			return;
+		}
+
+		Utils.showMessage(this, "Account creation failed", "Please try again later or contact me on twitter @vbsteven");
 	}
-	
+
+	/**
+	 * shows a dialog with the given title, message and opens the next step of the wizard
+	 * afther the dialog is dismissed
+	 * 
+	 * @param title
+	 * @param message
+	 */
 	private void showSuccessfulMessage(String title, String message) {
 		new AlertDialog.Builder(this).setTitle(title).setMessage(message)
 				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -271,7 +333,10 @@ public class RegistrationActivity extends Activity {
 					}
 				}).create().show();
 	}
-	
+
+	/**
+	 * shows progress dialog for login
+	 */
 	private void showLoginProgress() {
 		if (progress != null) {
 			progress.dismiss();
@@ -279,15 +344,21 @@ public class RegistrationActivity extends Activity {
 		
 		progress = ProgressDialog.show(this, "Bookmark to Desktop", "Attempting login...");
 	}
-	
-	private void showProgress() {
+
+	/**
+	 * shows progress dialog for registration
+	 */
+	private void showRegisterProgress() {
 		if (progress != null) {
 			progress.dismiss();
 		}
 		
 		progress = ProgressDialog.show(this, "Bookmark to Desktop", "Creating account...");
 	}
-	
+
+	/**
+	 * hides the shown dialog (if any)
+	 */
 	private void hideProgress() {
 		if (progress != null) {
 			progress.dismiss();
