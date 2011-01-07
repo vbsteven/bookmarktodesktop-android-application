@@ -52,7 +52,7 @@ import android.widget.Toast;
  */
 public class ShareActivity extends Activity {
 
-	private static final String URL = "http://bookmarktodesktop.appspot.com/addbookmark"; 
+	private static final String URL = "https://bookmarktodesktop.appspot.com/addbookmark"; 
 
 	private String responseMessage = "";
 	private Handler handler;

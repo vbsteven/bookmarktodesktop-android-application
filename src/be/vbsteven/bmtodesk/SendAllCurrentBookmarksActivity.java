@@ -128,7 +128,7 @@ public class SendAllCurrentBookmarksActivity extends Activity {
 	public void doPost(String username, String password, String title, String url) {
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost post = new HttpPost(URI.create("http://bookmarktodesktop.appspot.com/addbookmark"));
+			HttpPost post = new HttpPost(URI.create("shttp://bookmarktodesktop.appspot.com/addbookmark"));
 			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
 			nameValuePairs.add(new BasicNameValuePair("username", username));
 			nameValuePairs.add(new BasicNameValuePair("password", password));
