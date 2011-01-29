@@ -36,19 +36,20 @@
 	android:layout_marginTop="15dp"
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
-	android:text="Use the 'Share page' option of your Android browser to trigger Bookmark to Desktop.\n\nOnce a bookmark is sent to the server, it will shortly show up in the bookmarks of your browser or your RSS feed."
+	android:text="Use the 'Share page' option of your Android browser to trigger Bookmark to Desktop.\n\nOnce a bookmark is sent to the server, it will shortly show up in the bookmarks of your browser (browser extension required) or your personalized RSS feed."
 	android:autoText="true"
 	android:autoLink="all" />
 
 <Button
+	android:layout_marginTop="15dp"
 	android:id="@+id/but_showvideo"
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
 	android:text="Introduction video"
-	android:layout_marginTop="15dp"
 	/>
 
 <Button
+    android:layout_marginTop="15dp"
 	android:id="@+id/but_downloadaddons"
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
@@ -56,6 +57,7 @@
 	/>
 
 <Button
+    android:layout_marginTop="15dp"
 	android:id="@+id/but_configurerss"
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
