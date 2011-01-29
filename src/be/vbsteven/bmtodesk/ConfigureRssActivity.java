@@ -23,32 +23,53 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
- * this activity just shows an explanation on how to install the browser extensions
+ * setup screen for the personal RSS feed
  *
  * @author steven
  */
-public class ConfigureAddonActivity extends Activity {
+public class ConfigureRssActivity extends Activity {
+
+
+	private String rsslink;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(android.R.style.Theme_Light_NoTitleBar);
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.configaddons);
+		setContentView(R.layout.configrss);
 
-		Button button = (Button) findViewById(R.id.but_sendaddons);
+		rsslink = calculateLink();
+
+		TextView tvlink = (TextView)findViewById(R.id.tv_rsslink);
+		tvlink.setText(rsslink);
+
+		Button button = (Button) findViewById(R.id.but_sendrss);
 		button.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(Intent.ACTION_SEND);
 				i.setType("message/rfc822");
-				i.putExtra(Intent.EXTRA_SUBJECT,"Bookmark to Desktop browser extensions");
-				i.putExtra(Intent.EXTRA_TEXT,"Dear user,\n\nThanks for using Bookmark to Desktop for Android.\n\nYou can find extensions for your browser on http://bookmarktodesktop.appspot.com/addons\n\nSteven\nhttp://bookmarktodesktop.appspot.com");
+				i.putExtra(Intent.EXTRA_SUBJECT,"Personal RSS feed for Bookmark to Desktop");
+				i.putExtra(Intent.EXTRA_TEXT,"Dear user,\n\nThanks for using Bookmark to Desktop for Android.\n\nYou can find your personal RSS feed on " + rsslink + "\n\nSteven\nhttp://bookmarktodesktop.appspot.com");
 				startActivity(Intent.createChooser(i, "Select email application."));
 			}
 		});
+	}
+
+	private String calculateLink() {
+		String link;
+
+		String username = Global.getUsername(this);
+		String password = Global.getPassword(this);
+
+	    String key = MD5.md5(username + ":" + password);
+
+	    link = "http://bookmarktodesktop.appspot.com/rss/" + username + "/"+ key;
+		return link;
 	}
 }

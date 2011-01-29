@@ -11,6 +11,7 @@
         <activity android:name=".AfterSuccessfulSendActivity" />
         <activity android:name=".SendAllCurrentBookmarksActivity" />
         <activity android:name=".ConfigureAddonActivity" />
+        <activity android:name=".ConfigureRssActivity" />
 
     	<!-- Main activity with intentfilter for application launcher -->
         <activity android:name=".MainActivity"
