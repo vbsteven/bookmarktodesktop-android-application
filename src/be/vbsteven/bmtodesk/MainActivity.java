@@ -18,11 +18,6 @@
 package be.vbsteven.bmtodesk;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -83,43 +78,26 @@ public class MainActivity extends Activity {
 			}
 		});
 
+
+		button = (Button)findViewById(R.id.but_showvideo);
+		button.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showYoutubeVideo();
+			}
+		});
+
+
 	}
 
 	/**
-	 * shows the popup with the youtube video
+	 * shows the youtube introduction video
 	 */
-	private void showYoutubeVideoPopup() {
-		final Dialog dialog = new AlertDialog.Builder(this)
-				.setTitle("See introduction video")
-				.setMessage("Before you start using this application. Do you want to watch an introduction video first?")
-				.setPositiveButton("Play video", new OnClickListener() {
-
-					@Override
-					public void onClick(final DialogInterface dialog, final int which) {
-						// show video
-						final Intent intent = new Intent(Intent.ACTION_VIEW);
-						intent.setData(Uri.parse("http://www.youtube.com/watch?v=RH4O019v2iA"));
-						startActivity(intent);
-						Global.setSeenYoutubeVideoPopup(MainActivity.this);
-					}
-
-				}).setNegativeButton("Later", new OnClickListener() {
-
-					@Override
-					public void onClick(final DialogInterface dialog, final int which) {
-						Global.setSeenYoutubeVideoPopup(MainActivity.this);
-					}
-
-				}).setOnCancelListener(new OnCancelListener() {
-
-					@Override
-					public void onCancel(final DialogInterface dialog) {
-						Global.setSeenYoutubeVideoPopup(MainActivity.this);
-					}
-
-				})
-				.create();
-		dialog.show();
+	private void showYoutubeVideo() {
+		final Intent intent = new Intent(Intent.ACTION_VIEW);
+		intent.setData(Uri.parse("http://www.youtube.com/watch?v=RH4O019v2iA"));
+		startActivity(intent);
 	}
 
 	@Override
