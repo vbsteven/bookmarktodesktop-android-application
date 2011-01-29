@@ -34,7 +34,7 @@
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
 	android:layout_marginTop="15dp"
-	android:text="Now that your account is setup. It is time to configure your desktop browser addon."
+	android:text="Bookmark to Desktop can place your saved links in the bookmarks folder of your desktop browser.\n\nFor this to work you need to install a browser extension."
 	android:autoLink="all"/>
 <TextView
 	android:layout_marginTop="15dp"
@@ -43,33 +43,26 @@
 	android:text="Currently only Google Chrome/Chromium and Mozilla Firefox are supported. You can find download links on \n\nhttp://bookmarktodesktop.appspot.com/addons"
 	android:autoText="true"
 	android:autoLink="all" />          
-	
+
+<Button
+	android:id="@+id/but_sendaddons"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:layout_marginTop="15dp"
+	android:text="Send this link by email" />
+
 <TextView
 	android:layout_marginTop="15dp"
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
-	android:text="Once your browser addon is setup you are ready to start sending links from your Android device to your desktop browser."
+	android:text="Don't forget to configure your browser extension with your credentials after installation."
 	android:autoText="true"
 	android:autoLink="all" />
-	
-<TextView
-	android:layout_marginTop="15dp"
-	android:layout_height="wrap_content"
-	android:layout_width="fill_parent"
-	android:text="You can do this by longpressing the url in your Android browser and selecting Share Page."
-	android:autoText="true"
-	android:autoLink="all" />  
+
+
 		
 	</LinearLayout>
 </ScrollView>
-
-<Button
-    android:id="@+id/but_finish"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:text="Finish intro"
-    android:layout_alignParentBottom="true"
-    />
 
 	
 </RelativeLayout>

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2010-2011 Steven Van Bael <steven.v.bael@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package be.vbsteven.bmtodesk;
 
@@ -26,9 +26,9 @@ import android.widget.Button;
 
 /**
  * second step of the introduction wizard
- * 
+ *
  * this activity just shows an explanation on how to install the browser extensions
- * 
+ *
  * @author steven
  */
 public class ConfigureAddonActivity extends Activity {
@@ -40,14 +40,16 @@ public class ConfigureAddonActivity extends Activity {
 
 		setContentView(R.layout.configaddons);
 
-		Button button = (Button) findViewById(R.id.but_finish);
+		Button button = (Button) findViewById(R.id.but_sendaddons);
 		button.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(ConfigureAddonActivity.this,
-						MainActivity.class));
-				finish();
+				Intent i = new Intent(Intent.ACTION_SEND);
+				i.setType("message/rfc822");
+				i.putExtra(Intent.EXTRA_SUBJECT,"Bookmark to Desktop browser extensions");
+				i.putExtra(Intent.EXTRA_TEXT,"Dear user,\n\nThanks for using Bookmark to Desktop for Android.\n\nYou can find extensions for your browser on http://bookmarktodesktop.appspot.com/addons\n\nSteven\nhttp://bookmarktodesktop.appspot.com");
+				startActivity(Intent.createChooser(i, "Select email application."));
 			}
 		});
 	}

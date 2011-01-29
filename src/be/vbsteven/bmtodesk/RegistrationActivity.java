@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2010-2011 Steven Van Bael <steven.v.bael@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package be.vbsteven.bmtodesk;
 
@@ -31,10 +31,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,12 +45,13 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * registration activity is presented when the user opens the app for the first time
- * 
+ *
  * given credentials can be used to create a new account or to login with an existing one
- * 
+ *
  * @author steven
  */
 public class RegistrationActivity extends Activity {
@@ -84,17 +83,17 @@ public class RegistrationActivity extends Activity {
 
 		button = (Button)findViewById(R.id.but_login);
 		button.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				checkLogin();
 			}
 
 		});
-		
+
 		CheckBox cb = (CheckBox)findViewById(R.id.cb_password);
 		cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
+
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				EditText password = (EditText)findViewById(R.id.et_password);
@@ -113,7 +112,7 @@ public class RegistrationActivity extends Activity {
 	private void checkLogin() {
 		final String username = ((TextView) findViewById(R.id.et_username)).getText().toString();
 		final String password = ((TextView) findViewById(R.id.et_password)).getText().toString();
-		
+
 		if (!checkInput(username, password)) {
 			return;
 		}
@@ -159,7 +158,7 @@ public class RegistrationActivity extends Activity {
 
 	/**
 	 * validates if the given username and password are according to policy
-	 * 
+	 *
 	 * @param username
 	 * @param password
 	 * @return true if the given credentials are valid for use
@@ -185,9 +184,9 @@ public class RegistrationActivity extends Activity {
 
 	/**
 	 * sends a POST request to the server for registration
-	 * 
+	 *
 	 * the result will be put in responseMessage
-	 * 
+	 *
 	 * @param username
 	 * @param password
 	 */
@@ -195,12 +194,12 @@ public class RegistrationActivity extends Activity {
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpPost post = new HttpPost(URI.create("https://bookmarktodesktop.appspot.com/createuser"));
-			
+
 			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("username", username));
 			nameValuePairs.add(new BasicNameValuePair("password", password));
 			post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			
+
 			HttpResponse response = httpclient.execute(post);
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
@@ -214,9 +213,9 @@ public class RegistrationActivity extends Activity {
 
 	/**
 	 * sends a POST request to the server for login
-	 * 
+	 *
 	 * the result will be put in responseMessage
-	 * 
+	 *
 	 * @param username
 	 * @param password
 	 */
@@ -244,7 +243,7 @@ public class RegistrationActivity extends Activity {
 	/**
 	 * runnable to execute on the UI thread once the registration POST has finished
 	 */
-	private Runnable afterRegisterRequestRunnable = new Runnable() {
+	private final Runnable afterRegisterRequestRunnable = new Runnable() {
 
 		@Override
 		public void run() {
@@ -257,7 +256,7 @@ public class RegistrationActivity extends Activity {
 	/**
 	 * runnable to execute on the UI thread once the login POST has finished
 	 */
-	private Runnable afterLoginRequestRunnable = new Runnable() {
+	private final Runnable afterLoginRequestRunnable = new Runnable() {
 
 		@Override
 		public void run() {
@@ -269,7 +268,7 @@ public class RegistrationActivity extends Activity {
 
 	/**
 	 * handles the result form the login POST request
-	 * 
+	 *
 	 * @param message
 	 */
 	private void onLoginResult(String message) {
@@ -290,14 +289,16 @@ public class RegistrationActivity extends Activity {
 
 			Global.saveUsernameAndPassword(this, username, password);
 
-			showSuccessfulMessage("Login successful!", null);
+			showSuccessfulMessage("Login successful");
+			startActivity(new Intent(this, MainActivity.class));
+			finish();
 			return;
 		}
 	}
 
 	/**
 	 * handles the result from the registration POST request
-	 * 
+	 *
 	 * @param message
 	 */
 	private void onRegistrationResult(String message) {
@@ -323,7 +324,9 @@ public class RegistrationActivity extends Activity {
 
 			Global.saveUsernameAndPassword(this, username, password);
 
-			showSuccessfulMessage("Account creation successful!", null);
+			showSuccessfulMessage("Account creation successful");
+			startActivity(new Intent(this, MainActivity.class));
+			finish();
 			return;
 		}
 
@@ -331,24 +334,13 @@ public class RegistrationActivity extends Activity {
 	}
 
 	/**
-	 * shows a dialog with the given title, message and opens the next step of the wizard
-	 * afther the dialog is dismissed
-	 * 
-	 * @param title
+	 * shows a successful message to the user
+	 *
 	 * @param message
 	 */
-	private void showSuccessfulMessage(String title, String message) {
-		new AlertDialog.Builder(this).setTitle(title).setMessage(message)
-				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						setResult(Activity.RESULT_OK);
-						Intent intent = new Intent(RegistrationActivity.this, ConfigureAddonActivity.class);
-						startActivity(intent);
-						finish();
-					}
-				}).create().show();
+	private void showSuccessfulMessage(String message) {
+		Toast t = Toast.makeText(this, message, Toast.LENGTH_LONG);
+		t.show();
 	}
 
 	/**
@@ -358,7 +350,7 @@ public class RegistrationActivity extends Activity {
 		if (progress != null) {
 			progress.dismiss();
 		}
-		
+
 		progress = ProgressDialog.show(this, "Bookmark to Desktop", "Attempting login...");
 	}
 
@@ -369,7 +361,7 @@ public class RegistrationActivity extends Activity {
 		if (progress != null) {
 			progress.dismiss();
 		}
-		
+
 		progress = ProgressDialog.show(this, "Bookmark to Desktop", "Creating account...");
 	}
 
