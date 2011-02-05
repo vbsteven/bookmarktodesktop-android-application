@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2010-2011 Steven Van Bael <steven.v.bael@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package be.vbsteven.bmtodesk;
 
@@ -45,14 +45,14 @@ import android.widget.Toast;
 
 /**
  * this activity will be called when the user decides to share a bookmark with this application
- * 
+ *
  * it shows two textboxes so the user can validate the given title/url and then sends them to the server
- * 
+ *
  * @author steven
  */
 public class ShareActivity extends Activity {
 
-	private static final String URL = "https://bookmarktodesktop.appspot.com/addbookmark"; 
+	private static final String URL = "https://bookmarktodesktop.appspot.com/addbookmark";
 
 	private String responseMessage = "";
 	private Handler handler;
@@ -103,7 +103,9 @@ public class ShareActivity extends Activity {
 		// if fastsharing is on don't bother asking the user for a title
 		if (Global.isFastSharing(this)) {
 			String url = ((EditText)findViewById(R.id.et_url)).getText().toString();
-			sendToServer(url, url);
+			if (validateInput(url, url)) {
+				sendToServer(url, url);
+			}
 		}
 	}
 
@@ -111,6 +113,8 @@ public class ShareActivity extends Activity {
 	 * sanitizes the input so it does not contain newlines
 	 */
 	private String sanitizeValue(String value) {
+
+
 		// for the moment only skyfire has this issue so we can always
 		// just return the first part
 		String[] parts = value.split("\n");
@@ -119,7 +123,7 @@ public class ShareActivity extends Activity {
 
 	/**
 	 * starts sending the bookmark to the server
-	 * 
+	 *
 	 * @param title
 	 * @param url
 	 */
@@ -140,7 +144,7 @@ public class ShareActivity extends Activity {
 
 		// run in new thread to not block UI thread with network I/O
 		Thread thread = new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				String username = Global.getUsername(ShareActivity.this);
@@ -154,7 +158,7 @@ public class ShareActivity extends Activity {
 
 	/**
 	 * validates if the input is correct
-	 * 
+	 *
 	 * @param title
 	 * @param url
 	 * @return true if input is valid
@@ -163,7 +167,7 @@ public class ShareActivity extends Activity {
 		if (title == null || url == null) {
 			Utils.showMessage(this, "Input invalid", "Please provide a title and a url");
 			return false;
-		} 
+		}
 
 		if (title.equals("") || url.equals("")) {
 			Utils.showMessage(this, "input invalid", "Please provide a title and a url");
@@ -177,9 +181,9 @@ public class ShareActivity extends Activity {
 
 	/**
 	 * sends the actual request to the server in the form of an HTTP POST
-	 * 
+	 *
 	 * the result will be put in responseMessage
-	 * 
+	 *
 	 * @param username
 	 * @param password
 	 * @param title
@@ -212,8 +216,8 @@ public class ShareActivity extends Activity {
 	/**
 	 * runnable that makes sure the handling of the response is done back on the UI thread
 	 */
-	private Runnable afterRequestRunnable = new Runnable() {
-		
+	private final Runnable afterRequestRunnable = new Runnable() {
+
 		@Override
 		public void run() {
 			hideProgress();
@@ -224,7 +228,7 @@ public class ShareActivity extends Activity {
 
 	/**
 	 * handles the result of the POST request
-	 * 
+	 *
 	 * @param message
 	 */
 	private void onResult(String message) {
@@ -275,7 +279,7 @@ public class ShareActivity extends Activity {
 
 		progress = ProgressDialog.show(this, "Bookmark to Desktop", "Sending bookmark to server...");
 	}
-	
+
 	/**
 	 * hides the progress dialog
 	 */
