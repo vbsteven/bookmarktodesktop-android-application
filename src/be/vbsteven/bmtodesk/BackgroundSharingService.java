@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2010-2011 Steven Van Bael <steven.v.bael@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package be.vbsteven.bmtodesk;
 
@@ -40,9 +40,9 @@ import android.os.IBinder;
 import android.util.Log;
 
 /**
- * service that sends bookmarks to the server in the background 
+ * service that sends bookmarks to the server in the background
  * and keeps the user up to date through notifications
- * 
+ *
  * @author steven
  */
 public class BackgroundSharingService extends Service {
@@ -53,7 +53,7 @@ public class BackgroundSharingService extends Service {
 
 	private String title = "";
 	private String url = "";
-	
+
 	@Override
 	/**
 	 * not really used here
@@ -61,11 +61,11 @@ public class BackgroundSharingService extends Service {
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
-	
+
 	@Override
 	/**
 	 * starts the service and gets ready to send bookmark
-	 * 
+	 *
 	 * this service is supposed to only get started once for every bookmark
 	 * so if onStart is called it means a new bookmark needs to be sent
 	 */
@@ -87,10 +87,10 @@ public class BackgroundSharingService extends Service {
 			return;
 		}
 	}
-	
+
 	/**
 	 * sends the bookmark to the server in a POST request
-	 * 
+	 *
 	 * @param title
 	 * @param url
 	 */
@@ -100,7 +100,7 @@ public class BackgroundSharingService extends Service {
 		String username = Global.getUsername(BackgroundSharingService.this);
 		String password = Global.getPassword(BackgroundSharingService.this);
 		String responseMessage;
-		
+
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpPost post = new HttpPost(URI.create(URL));
@@ -120,18 +120,18 @@ public class BackgroundSharingService extends Service {
 		} catch (Exception e) {
 			responseMessage = "REQUESTFAILED";
 		}
-		
+
 		hideProgress();
 		onResult(responseMessage);
 	};
 
 	/**
 	 * handles the result for the POST request
-	 * 
+	 *
 	 * @param message the message returned from the POST request
 	 */
 	private void onResult(String message) {
-		
+
 		if (message == null) {
 			showFailedSend("Please try again later or contact me on twitter: @vbsteven");
 			return;
@@ -144,7 +144,7 @@ public class BackgroundSharingService extends Service {
 			showFailedSend("Authentication failed");
 		} else if (message.startsWith("SUCCESSFUL")) {
 			showSuccessfulSend();
-			
+
 		} else if (message.startsWith("REQUESTFAILED")) {
 			showFailedSend("Please try again later or contact me on twitter @vbsteven");
 		} else {
@@ -176,7 +176,7 @@ public class BackgroundSharingService extends Service {
 
 	/**
 	 * shows notification when the sending failed
-	 * 
+	 *
 	 * @param message
 	 */
 	private void showFailedSend(String message) {
@@ -194,13 +194,17 @@ public class BackgroundSharingService extends Service {
 	 * shows notification when the sending succeeded
 	 */
 	private void showSuccessfulSend() {
-		Notification n = new Notification(R.drawable.icon, "Sending bookmark successful", System.currentTimeMillis());
-		n.flags = Notification.FLAG_AUTO_CANCEL;
-		Intent i = new Intent(this, AfterSuccessfulSendActivity.class);
-		i.putExtra(Global.EXTRA_TITLE, title);
-		i.putExtra(Global.EXTRA_URL, url);
-		PendingIntent p = PendingIntent.getActivity(this, 4, i, 0);
-		n.setLatestEventInfo(this, "Bookmark to Desktop", "Sending bookmark successful", p);
-		nManager.notify(3, n);
+		if (Global.isHideConfirmation(this)) {
+			nManager.cancelAll();
+		} else {
+			Notification n = new Notification(R.drawable.icon, "Sending bookmark successful", System.currentTimeMillis());
+			n.flags = Notification.FLAG_AUTO_CANCEL;
+			Intent i = new Intent(this, AfterSuccessfulSendActivity.class);
+			i.putExtra(Global.EXTRA_TITLE, title);
+			i.putExtra(Global.EXTRA_URL, url);
+			PendingIntent p = PendingIntent.getActivity(this, 4, i, 0);
+			n.setLatestEventInfo(this, "Bookmark to Desktop", "Sending bookmark successful", p);
+			nManager.notify(3, n);
+		}
 	}
 }
