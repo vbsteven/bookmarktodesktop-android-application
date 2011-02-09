@@ -82,7 +82,7 @@ public class ShareActivity extends Activity {
 				EditText urlText = (EditText) findViewById(R.id.et_url);
 
 				titleText.setText(value);
-				urlText.setText(value);
+				urlText.setText(stripFromTweet(value));
 			}
 		}
 
@@ -112,14 +112,40 @@ public class ShareActivity extends Activity {
 	/*
 	 * sanitizes the input so it does not contain newlines
 	 */
-	private String sanitizeValue(String value) {
-
-
+	public String sanitizeValue(String value) {
 		// for the moment only skyfire has this issue so we can always
 		// just return the first part
 		String[] parts = value.split("\n");
-		return parts[0];
+		return parts[0].replaceAll(" ", "");
 	}
+
+	/*
+	 * extracts a url in case the given text contains more than just the url
+	 * (for example when a full tweet is shared)
+	 */
+	public String stripFromTweet(String value) {
+
+		if (!value.contains("http://") && !value.contains("https://")) {
+			return value;
+		}
+
+		int pos = value.indexOf("http://");
+		if (pos < 0) {
+			pos = value.indexOf("https://");
+		}
+
+		value = value.substring(pos);
+
+		pos = value.indexOf(" ");
+		if (pos >= 0) {
+			value = value.substring(0, pos);
+		}
+
+		return value;
+
+	}
+
+
 
 	/**
 	 * starts sending the bookmark to the server
