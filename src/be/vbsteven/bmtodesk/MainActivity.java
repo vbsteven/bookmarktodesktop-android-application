@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.main);
-		C2DM.registerToC2DM(this);
+		C2DM.registerToC2DM(this, false);
 	}
 
 	@Override

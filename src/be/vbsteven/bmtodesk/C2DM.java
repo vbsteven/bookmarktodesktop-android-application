@@ -18,7 +18,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.util.Log;
 
 public class C2DM extends BroadcastReceiver {
@@ -30,20 +29,17 @@ public class C2DM extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(final Context context, final Intent intent) {
-		if (intent.getAction().equals(
-				"com.google.android.c2dm.intent.REGISTRATION")) {
+		if (intent.getAction().equals("com.google.android.c2dm.intent.REGISTRATION")) {
 			handleRegistration(context, intent);
-		} else if (intent.getAction().equals(
-				"com.google.android.c2dm.intent.RECEIVE")) {
+		} else if (intent.getAction().equals("com.google.android.c2dm.intent.RECEIVE")) {
 			handleMessage(context, intent);
 		}
 	}
 
 	private void handleMessage(final Context context, final Intent intent) {
-		Log.d("C2DM", "C2DM message received!");
+		Log.d(Global.TAG + ".C2DM", "C2DM message received!");
 		final String url = intent.getStringExtra("url");
-		Bundle b = intent.getExtras();
-		Log.d("C2DM", "C2DM data: url=" + url);
+		Log.d(Global.TAG + ".C2DM", "C2DM data: url=" + url);
 
 		Intent i = new Intent(Intent.ACTION_VIEW);
 		i.setData(Uri.parse(url));
@@ -55,19 +51,17 @@ public class C2DM extends BroadcastReceiver {
 		final String registration = intent.getStringExtra("registration_id");
 		if (intent.getStringExtra("error") != null) {
 			// Registration failed, should try again later.
-			Log.d("C2DM",
-					"registration error: " + intent.getStringExtra("error"));
+			Log.d(Global.TAG + ".C2DM","registration error: " + intent.getStringExtra("error"));
 		} else if (intent.getStringExtra("unregistered") != null) {
-			Log.d("C2DM", "unregistered");
-			// unregistration done, new messages from the authorized sender will
-			// be rejected
+			Log.d(Global.TAG + ".C2DM", "unregistered");
+
 		} else if (registration != null) {
+			saveRegistration(context, registration);
 			sendC2DMRegistrationId(context, registration);
-			Log.d("C2DM", "registered successfully with registration_id: "
-					+ registration);
-			// TODO do something with registration
+			Log.d(Global.TAG + ".C2DM", "registered successfully with registration_id: " + registration);
+
 		} else {
-			Log.d("C2DM", "other registration error");
+			Log.d(Global.TAG + ".C2DM"", "other registration error");
 		}
 		if (registration != null)
 			sendC2DMRegistrationId(context, registration);
@@ -88,25 +82,36 @@ public class C2DM extends BroadcastReceiver {
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					response.getEntity().getContent(), "UTF-8"));
-			String line = reader.readLine();
 			responseMessage = reader.readLine();
 		} catch (Exception e) {
-			Log.e("C2DM", "error sending C2DM registration", e);
+			Log.e(Global.TAG + ".C2DM", "error sending C2DM registration", e);
 			responseMessage = "REQUESTFAILED";
 		}
 
-		Log.d("C2DM", "sendC2DMRegistrationId returned: " + responseMessage);
+		Log.d(Global.TAG + ".C2DM", "sendC2DMRegistrationId returned: " + responseMessage);
 	}
 
-	public static void registerToC2DM(final Context context) {
-		Log.d("C2DM", "registering...");
-		final Intent registrationIntent = new Intent(
-				"com.google.android.c2dm.intent.REGISTER");
-		registrationIntent.putExtra("app", PendingIntent.getBroadcast(context,
-				0, new Intent(context, C2DM.class), 0)); // boilerplate
+	public static void registerToC2DM(final Context context, boolean force) {
+
+		if (hasRegistration(context) && !force) {
+			Log.d(Global.TAG + ".C2DM", "already have registrationId, do nothing");
+			return;
+		}
+
+		Log.d(Global.TAG + ".C2DM", "registering...");
+		final Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+		registrationIntent.putExtra("app", PendingIntent.getBroadcast(context, 0, new Intent(context, C2DM.class), 0)); // boilerplate
 		registrationIntent.putExtra("sender", C2DM_EMAIL);
 		context.startService(registrationIntent);
-		Log.d("C2DM", "registration sent");
+		Log.d(Global.TAG + ".C2DM", "registration sent");
+	}
+
+	public static boolean hasRegistration(final Context context) {
+		return !"".equals(Global.getPrefs(context).getString("c2dm.registrationid", ""));
+	}
+
+	public static void saveRegistration(final Context context, String registrationId) {
+		Global.getPrefs(context).edit().putString("c2dm.registrationid", registrationId).commit();
 	}
 
 }
