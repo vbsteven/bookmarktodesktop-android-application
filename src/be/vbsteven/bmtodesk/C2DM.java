@@ -61,7 +61,7 @@ public class C2DM extends BroadcastReceiver {
 			Log.d(Global.TAG + ".C2DM", "registered successfully with registration_id: " + registration);
 
 		} else {
-			Log.d(Global.TAG + ".C2DM"", "other registration error");
+			Log.d(Global.TAG + ".C2DM", "other registration error");
 		}
 		if (registration != null)
 			sendC2DMRegistrationId(context, registration);
