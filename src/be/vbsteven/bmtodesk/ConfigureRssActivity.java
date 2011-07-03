@@ -69,7 +69,7 @@ public class ConfigureRssActivity extends Activity {
 
 	    String key = MD5.md5(username + ":" + password);
 
-	    link = "http://bookmarktodesktop.appspot.com/rss/" + username + "/"+ key;
+	    link = Global.getDomain() + "/rss/" + username + "/"+ key;
 		return link;
 	}
 }

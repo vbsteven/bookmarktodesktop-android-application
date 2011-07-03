@@ -24,7 +24,7 @@ import android.util.Log;
 public class C2DM extends BroadcastReceiver {
 
 
-	private static final String URL = "http://bookmarktodesktopdev.appspot.com/api/registerdeviceid";
+	private static final String URL = Global.getDomain() + "/api/registerdeviceid";
 	private static final String C2DM_EMAIL = "steven.v.bael@gmail.com";
 	private String responseMessage = "";
 
@@ -89,10 +89,6 @@ public class C2DM extends BroadcastReceiver {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					response.getEntity().getContent(), "UTF-8"));
 			String line = reader.readLine();
-			while (line != null) {
-				Log.e("C2DM", line);
-				line = reader.readLine();
-			}
 			responseMessage = reader.readLine();
 		} catch (Exception e) {
 			Log.e("C2DM", "error sending C2DM registration", e);

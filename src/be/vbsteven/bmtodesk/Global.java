@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2010-2011 Steven Van Bael <steven.v.bael@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package be.vbsteven.bmtodesk;
 
@@ -22,13 +22,17 @@ import android.content.SharedPreferences;
 
 /**
  * global constants and a few utility methods used throughout the application
- * 
+ *
  * @author steven
  */
 public class Global {
 	public static final String TAG = "bookmarktodesktop"; // for logging
-	
+
 	public static final String PREFS = "be.vbsteven.bmtodesk_preferences";
+
+	public static final String DOMAIN_PROD = "https://bookmarktodesktop.appspot.com";
+	public static final String DOMAIN_DEV = "https://bookmarktodesktopdev.appspot.com";
+	public static final boolean DEBUG = true;
 
 	// constants for preferences
 	public static final String USERNAME = "USERNAME";
@@ -44,7 +48,7 @@ public class Global {
 
 	/**
 	 * utility method for retrieving the shared preferences for this app
-	 * 
+	 *
 	 * @param context
 	 * @return the shared preferences object for this app
 	 */
@@ -71,7 +75,7 @@ public class Global {
 
 	/**
 	 * saves the user credentials to the preferences
-	 * 
+	 *
 	 * @param context
 	 * @param username
 	 * @param password
@@ -84,7 +88,7 @@ public class Global {
 
 	/**
 	 * checks if the user configured an account
-	 * 
+	 *
 	 * @param context
 	 * @return true if we have user credentials
 	 */
@@ -133,5 +137,17 @@ public class Global {
 	 */
 	public static boolean isBackgroundSharing(Context context) {
 		return getPrefs(context).getBoolean("BACKGROUNDSHARING", false);
+	}
+
+	public static String getDomain() {
+		if (DEBUG) {
+			return DOMAIN_DEV;
+		} else {
+			return DOMAIN_PROD;
+		}
+	}
+
+	public static boolean isDebug() {
+		return DEBUG;
 	}
 }

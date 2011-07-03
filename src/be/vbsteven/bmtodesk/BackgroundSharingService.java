@@ -47,7 +47,7 @@ import android.util.Log;
  */
 public class BackgroundSharingService extends Service {
 
-	private static final String URL = "https://bookmarktodesktop.appspot.com/addbookmark";
+	private static final String URL = Global.getDomain() + "/addbookmark";
 
 	private NotificationManager nManager;
 

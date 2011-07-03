@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2010-2011 Steven Van Bael <steven.v.bael@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package be.vbsteven.bmtodesk;
 
@@ -45,14 +45,14 @@ import android.widget.Button;
 
 /**
  * activity that sends all current bookmarks in the android browser to the server
- * 
+ *
  * FIXME: this part was quickly hacked together because of high user demand
  *        it could use a big cleanup + documentation
- * 
+ *
  * @author steven
  */
 public class SendAllCurrentBookmarksActivity extends Activity {
-	
+
 	private ArrayList<Bookmark> queue = new ArrayList<SendAllCurrentBookmarksActivity.Bookmark>();
 	private int totalqueuesize = 0;
 	private ProgressDialog progress;
@@ -64,12 +64,12 @@ public class SendAllCurrentBookmarksActivity extends Activity {
 		setTheme(android.R.style.Theme_Light_NoTitleBar);
 		super.onCreate(savedInstanceState);
 		handler = new Handler();
-		
+
 		setContentView(R.layout.sendallcurrent);
-		
+
 		final Button button = (Button)findViewById(R.id.but_sendall);
 		button.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(final View v) {
 				sendAllBookmarks();
@@ -81,23 +81,23 @@ public class SendAllCurrentBookmarksActivity extends Activity {
 		// first update queue
 		queue = getAllBookmarks();
 		totalqueuesize = queue.size();
-		
+
 		if (totalqueuesize <= 0) {
 			Utils.showMessage(this, "Invalid bookmarks", "No bookmarks were found in the browser");
 			return;
 		}
-		
+
 		showProgress();
 		processNextBookmark();
 	}
-	
+
 	protected void processNextBookmark() {
 		if (totalqueuesize <= 0) {
 			// started without bookmarks, should not happen
 			hideProgress();
 			return;
 		}
-		
+
 		if (queue.size() <= 0) {
 			// queue is empty, end of run
 			hideProgress();
@@ -107,16 +107,16 @@ public class SendAllCurrentBookmarksActivity extends Activity {
 			finish();
 			return;
 		}
-		
+
 		// pick first from the queue, remove and process it
 		final Bookmark b = queue.get(0);
 		queue.remove(0);
-		
-		int progresscount = totalqueuesize-queue.size(); 
+
+		int progresscount = totalqueuesize-queue.size();
 		progress.setMessage("Sending bookmarks to server (" +  progresscount + " of " + totalqueuesize + ")");
-		
+
 		Thread thread = new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				doPost(Global.getUsername(SendAllCurrentBookmarksActivity.this), Global.getPassword(SendAllCurrentBookmarksActivity.this), b.title, b.url);
@@ -124,11 +124,11 @@ public class SendAllCurrentBookmarksActivity extends Activity {
 		});
 		thread.start();
 	}
-	
+
 	public void doPost(String username, String password, String title, String url) {
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost post = new HttpPost(URI.create("shttp://bookmarktodesktop.appspot.com/addbookmark"));
+			HttpPost post = new HttpPost(URI.create(Global.getDomain() + "/addbookmark"));
 			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(4);
 			nameValuePairs.add(new BasicNameValuePair("username", username));
 			nameValuePairs.add(new BasicNameValuePair("password", password));
@@ -148,15 +148,15 @@ public class SendAllCurrentBookmarksActivity extends Activity {
 		}
 
 	}
-	
-	private Runnable afterRequestRunnable = new Runnable() {
-		
+
+	private final Runnable afterRequestRunnable = new Runnable() {
+
 		@Override
 		public void run() {
 			onRegistrationResult(responseMessage);
 		}
 	};
-	
+
 	private void onRegistrationResult(String message) {
 		Log.d(Global.TAG, "message: " + message);
 		if (message == null) {
@@ -164,7 +164,7 @@ public class SendAllCurrentBookmarksActivity extends Activity {
 			Utils.showMessage(this, "Sending bookmark failed", "Please try again later or contact me on twitter: @vbsteven");
 			return;
 		}
-		
+
 		if (message.startsWith("INVALIDENTRY")) {
 			hideProgress();
 			Utils.showMessage(this, "Invalid input", "Please provide a title and a url");
@@ -175,7 +175,7 @@ public class SendAllCurrentBookmarksActivity extends Activity {
 					"Please check your account info in preferences");
 		} else if (message.startsWith("SUCCESSFUL")) {
 			processNextBookmark();
-			
+
 		} else if (message.startsWith("REQUESTFAILED")) {
 			hideProgress();
 			Utils.showMessage(this, "Sending bookmark failed", "Please try again later or contact me on twitter @vbsteven");
@@ -184,21 +184,21 @@ public class SendAllCurrentBookmarksActivity extends Activity {
 			Utils.showMessage(this, "Sending bookmark failed", "Please try again later or contact me on twitter @vbsteven");
 		}
 	}
-	
-	
+
+
 	private void showProgress() {
 		if (progress != null) {
 			progress.dismiss();
 		}
-		
+
 		progress = ProgressDialog.show(this, "Bookmark to Desktop", "Sending " + queue.size() + " bookmarks to server");
 	}
-	
+
 	private void hideProgress() {
 		if (progress != null) {
 			progress.dismiss();
 		}
-		
+
 		progress = null;
 	}
 
@@ -206,7 +206,7 @@ public class SendAllCurrentBookmarksActivity extends Activity {
 		ArrayList<Bookmark> result = new ArrayList<SendAllCurrentBookmarksActivity.Bookmark>();
 		String[] projection = new String[]{ BookmarkColumns.TITLE, BookmarkColumns.URL};
 		Cursor c = managedQuery(Browser.BOOKMARKS_URI, projection, "bookmark = ?", new String[] {"1"}, null);
-		
+
 		if (c.moveToFirst()) {
 			int title = c.getColumnIndex(BookmarkColumns.TITLE);
 			int url = c.getColumnIndex(BookmarkColumns.URL);
@@ -215,14 +215,14 @@ public class SendAllCurrentBookmarksActivity extends Activity {
 				b.title = c.getString(title);
 				b.url = c.getString(url);
 				result.add(b);
-				
+
 				c.moveToNext();
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	protected class Bookmark {
 		public String title;
 		public String url;

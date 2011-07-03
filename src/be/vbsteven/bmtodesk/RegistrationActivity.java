@@ -193,7 +193,7 @@ public class RegistrationActivity extends Activity {
 	public void doRegisterPost(String username, String password) {
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost post = new HttpPost(URI.create("https://bookmarktodesktop.appspot.com/createuser"));
+			HttpPost post = new HttpPost(URI.create(Global.getDomain() + "/createuser"));
 
 			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("username", username));
@@ -222,7 +222,7 @@ public class RegistrationActivity extends Activity {
 	public void doLoginPost(String username, String password) {
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost post = new HttpPost(URI.create("https://bookmarktodesktop.appspot.com/checklogin"));
+			HttpPost post = new HttpPost(URI.create(Global.getDomain() + "/checklogin"));
 
 			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("username", username));
