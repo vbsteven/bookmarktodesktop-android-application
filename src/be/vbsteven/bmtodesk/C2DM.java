@@ -41,6 +41,15 @@ public class C2DM extends BroadcastReceiver {
 		final String url = intent.getStringExtra("url");
 		Log.d(Global.TAG + ".C2DM", "C2DM data: url=" + url);
 
+
+		// first save it to the store
+		BookmarkStore store = BookmarkStore.get(context);
+		IncomingBookmark bm = new IncomingBookmark();
+		bm.url = url;
+		bm.timestamp = System.currentTimeMillis();
+		store.addIncomingBookmark(bm);
+
+		// open it
 		Intent i = new Intent(Intent.ACTION_VIEW);
 		i.setData(Uri.parse(url));
 		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -1,0 +1,13 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/topbar" android:layout_height="45dp"
+	android:layout_width="fill_parent" android:background="#fff"
+	android:layout_alignParentTop="true" android:layout_alignParentLeft="true">
+	
+		<TextView android:id="@+id/tv_incoming_title"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:textColor="#333"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:padding="10dp"
+			/>
+
+</RelativeLayout>

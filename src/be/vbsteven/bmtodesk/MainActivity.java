@@ -42,6 +42,7 @@ public class MainActivity extends Activity {
 	private static final int MENU_EXPORT_ALL = 2;
 
 	private ListView incomingListView;
+	private BookmarkStore bookmarkStore;
 
 	@Override
 	/**
@@ -53,8 +54,10 @@ public class MainActivity extends Activity {
 
 		setContentView(R.layout.main);
 
+		bookmarkStore = BookmarkStore.get(this);
+
 		incomingListView = (ListView)findViewById(R.id.content_lv);
-		incomingListView.setAdapter(new IncomingBookmarkAdapter(this, new BookmarkStore().getLatestIncomingBookmarks()));
+		incomingListView.setAdapter(new IncomingBookmarkAdapter(this, bookmarkStore.getLatestIncomingBookmarks()));
 
 		incomingListView.setOnItemClickListener(new OnItemClickListener() {
 
