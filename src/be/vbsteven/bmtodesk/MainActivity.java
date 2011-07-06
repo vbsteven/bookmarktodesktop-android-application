@@ -24,7 +24,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
 /**
  * main activity the user sees when opening the app
@@ -38,6 +41,8 @@ public class MainActivity extends Activity {
 	private static final int MENU_CREATE_ACCOUNT = 1;
 	private static final int MENU_EXPORT_ALL = 2;
 
+	private ListView incomingListView;
+
 	@Override
 	/**
 	 * called when the activity is first created
@@ -47,6 +52,25 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.main);
+
+		incomingListView = (ListView)findViewById(R.id.content_lv);
+		incomingListView.setAdapter(new IncomingBookmarkAdapter(this, new BookmarkStore().getLatestIncomingBookmarks()));
+
+		incomingListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+
+				IncomingBookmark clickedBm = (IncomingBookmark)arg0.getItemAtPosition(arg2);
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(clickedBm.url));
+				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(i);
+
+			}
+		});
+
 		C2DM.registerToC2DM(this, false);
 	}
 
