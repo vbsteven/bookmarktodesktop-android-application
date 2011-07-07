@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/topbar" android:layout_height="45dp"
-	android:layout_width="fill_parent" android:background="#fff"
+	android:layout_width="fill_parent" android:background="@drawable/draweritembackground"
 	android:layout_alignParentTop="true" android:layout_alignParentLeft="true">
 	
 		<TextView android:id="@+id/tv_incoming_title"
