@@ -24,10 +24,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
 /**
  * main activity the user sees when opening the app
@@ -43,6 +45,7 @@ public class MainActivity extends Activity {
 
 	private ListView incomingListView;
 	private BookmarkStore bookmarkStore;
+	private Button upgradeButton;
 
 	@Override
 	/**
@@ -54,6 +57,30 @@ public class MainActivity extends Activity {
 
 		setContentView(R.layout.main);
 
+		LinearLayout notpaidLayout = (LinearLayout)findViewById(R.id.content_notpaid);
+		upgradeButton = (Button)findViewById(R.id.but_upgrade);
+		upgradeButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				String url = "http://market.android.com/details?id=be.vbsteven.bmtodesklicense";
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(url));
+				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(i);
+			}
+		});
+
+		initIncomingBookmarks();
+
+		if (Licensing.verify(this)) {
+			notpaidLayout.setVisibility(View.GONE);
+		} else {
+			incomingListView.setVisibility(View.GONE);
+		}
+	}
+
+	private void initIncomingBookmarks() {
 		bookmarkStore = BookmarkStore.get(this);
 
 		incomingListView = (ListView)findViewById(R.id.content_lv);

@@ -1,110 +1,85 @@
-<!-- Copyright (C) 2010-2011 Steven Van Bael <steven.v.bael@gmail.com>         -->
+<!-- Copyright (C) 2010-2011 Steven Van Bael <steven.v.bael@gmail.com> -->
 
-<!-- This program is free software; you can redistribute it and/or modify      -->
-<!-- it under the terms of the GNU General Public License as published by      -->
-<!-- the Free Software Foundation; either version 3 of the License, or         -->
-<!-- (at your option) any later version.                                       -->
+<!-- This program is free software; you can redistribute it and/or modify -->
+<!-- it under the terms of the GNU General Public License as published by -->
+<!-- the Free Software Foundation; either version 3 of the License, or -->
+<!-- (at your option) any later version. -->
 
-<!-- This program is distributed in the hope that it will be useful,           -->
-<!-- but WITHOUT ANY WARRANTY; without even the implied warranty of            -->
-<!-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             -->
-<!-- GNU General Public License for more details.                              -->
+<!-- This program is distributed in the hope that it will be useful, -->
+<!-- but WITHOUT ANY WARRANTY; without even the implied warranty of -->
+<!-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the -->
+<!-- GNU General Public License for more details. -->
 
-<!-- You should have received a copy of the GNU General Public License         -->
-<!-- along with this program; if not, write to the Free Software               -->
-<!-- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA -->
+<!-- You should have received a copy of the GNU General Public License -->
+<!-- along with this program; if not, write to the Free Software -->
+<!-- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 
+	USA -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bmtodesk="http://schemas.android.com/apk/res/be.vbsteven.bmtodesk"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
->
-<include android:id="@+id/topbar" layout="@layout/topbar" android:layout_alignParentTop="true"/>
+	xmlns:bmtodesk="http://schemas.android.com/apk/res/be.vbsteven.bmtodesk"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<include android:id="@+id/topbar" layout="@layout/topbar"
+		android:layout_alignParentTop="true" />
 
-<ScrollView
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:layout_below="@+id/topbar"
-	android:padding="15dp"
-	>
-	<LinearLayout
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:orientation="vertical">
+	<ScrollView android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:layout_below="@+id/topbar"
+		android:padding="15dp">
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:orientation="vertical">
 
-<TextView
-	android:layout_marginTop="15dp"
-	android:layout_height="wrap_content"
-	android:layout_width="fill_parent"
-	android:text="Use the 'Share page' option of your Android browser to trigger Bookmark to Desktop.\n\nOnce a bookmark is sent to the server, it will shortly show up in the bookmarks of your browser (browser extension required) or your personalized RSS feed."
-	android:autoText="true"
-	android:autoLink="all" />
+			<TextView android:layout_marginTop="15dp"
+				android:layout_height="wrap_content" android:layout_width="fill_parent"
+				android:text="Use the 'Share page' option of your Android browser to trigger Bookmark to Desktop.\n\nOnce a bookmark is sent to the server, it will shortly show up in the bookmarks of your browser (browser extension required) or your personalized RSS feed."
+				android:autoText="true" android:autoLink="all" />
 
-<Button
-	android:layout_marginTop="15dp"
-	android:id="@+id/but_showvideo"
-	android:layout_height="wrap_content"
-	android:layout_width="fill_parent"
-	android:text="Introduction video"
-	/>
+			<Button android:layout_marginTop="15dp" android:id="@+id/but_showvideo"
+				android:layout_height="wrap_content" android:layout_width="fill_parent"
+				android:text="Introduction video" />
 
-<Button
-    android:layout_marginTop="15dp"
-	android:id="@+id/but_downloadaddons"
-	android:layout_height="wrap_content"
-	android:layout_width="fill_parent"
-	android:text="Download browser extensions"
-	/>
+			<Button android:layout_marginTop="15dp" android:id="@+id/but_downloadaddons"
+				android:layout_height="wrap_content" android:layout_width="fill_parent"
+				android:text="Download browser extensions" />
 
-<Button
-    android:layout_marginTop="15dp"
-	android:id="@+id/but_configurerss"
-	android:layout_height="wrap_content"
-	android:layout_width="fill_parent"
-	android:text="Configure RSS feed"
-	android:layout_gravity="bottom"
-	/>
-	</LinearLayout>
-</ScrollView>
+			<Button android:layout_marginTop="15dp" android:id="@+id/but_configurerss"
+				android:layout_height="wrap_content" android:layout_width="fill_parent"
+				android:text="Configure RSS feed" android:layout_gravity="bottom" />
+		</LinearLayout>
+	</ScrollView>
 
- <SlidingDrawer
-     android:id="@+id/drawer"
-     android:layout_width="fill_parent"
-     android:layout_height="fill_parent"
+	<SlidingDrawer android:id="@+id/drawer"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
 
-     android:handle="@+id/handle"
-     android:content="@+id/content"
-     >
+		android:handle="@+id/handle" android:content="@+id/content">
 
-     <TextView
-         android:id="@id/handle"
-         android:layout_width="fill_parent"
-         android:layout_height="40dip" 
-         android:text="Incoming links"
-         android:textAppearance="?android:attr/textAppearanceMedium"
-         android:background="#ccc"
-         android:gravity="center"
-         />
+		<TextView android:id="@id/handle" android:layout_width="fill_parent"
+			android:layout_height="40dip" android:text="Incoming links"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:background="#ccc" android:gravity="center" />
 
 
-	 <LinearLayout
-		 android:id="@id/content"
-         android:layout_width="fill_parent"
-         android:layout_height="fill_parent"
-         android:background="#fff"
-         >
-         
-     	<ListView
-        	android:id="@+id/content_lv"
-         	android:layout_width="fill_parent"
-         	android:layout_height="fill_parent"
-         	>
-        </ListView>
-<!--        <TextView -->
-<!--        	android:id="@id/android:empty" android:layout_width="fill_parent"-->
-<!--			android:layout_height="fill_parent" android:text="No Results"     />-->
-         	
-	</LinearLayout>
- </SlidingDrawer>
+		<LinearLayout android:id="@id/content"
+			android:layout_width="fill_parent" android:layout_height="fill_parent"
+			android:background="#fff">
+
+			<ListView android:id="@+id/content_lv" android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+			</ListView>
+
+			<LinearLayout android:id="@+id/content_notpaid"
+				android:orientation="vertical" android:layout_width="fill_parent"
+				android:layout_height="fill_parent" android:background="#fff"
+				android:padding="15dp">
+
+				<TextView android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:text="Chrome to Phone functionality can be enabled by buying the Bookmark to Desktop pro license on the Android Market.\n\nIf you upgrade you not only get bi-directional push but you also support further development and maintenance of this app." />
+				<Button android:id="@+id/but_upgrade" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:text="Upgrade now" 
+					android:layout_marginTop="15dp"/>
+
+			</LinearLayout>
+
+		</LinearLayout>
+	</SlidingDrawer>
 
 </RelativeLayout>

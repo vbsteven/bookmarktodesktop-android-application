@@ -150,4 +150,8 @@ public class Global {
 	public static boolean isDebug() {
 		return DEBUG;
 	}
+
+	public static boolean isPaid(Context context) {
+		return Licensing.verify(context);
+	}
 }
