@@ -14,6 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -53,7 +54,12 @@ public class C2DM extends BroadcastReceiver {
 		Intent i = new Intent(Intent.ACTION_VIEW);
 		i.setData(Uri.parse(url));
 		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		context.startActivity(i);
+
+		try {
+			context.startActivity(i);
+		} catch (ActivityNotFoundException e) {
+			Log.e(Global.TAG, "could not find activity to handle: " + url);
+		}
 	}
 
 	private void handleRegistration(final Context context, final Intent intent) {
@@ -116,7 +122,8 @@ public class C2DM extends BroadcastReceiver {
 	}
 
 	public static boolean hasRegistration(final Context context) {
-		return !"".equals(Global.getPrefs(context).getString("c2dm.registrationid", ""));
+		String reg = Global.getPrefs(context).getString("c2dm.registrationid", "");
+		return reg.equals("");
 	}
 
 	public static void saveRegistration(final Context context, String registrationId) {
