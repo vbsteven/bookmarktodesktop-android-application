@@ -78,8 +78,16 @@ public class C2DM extends BroadcastReceiver {
 		} else {
 			Log.d(Global.TAG + ".C2DM", "other registration error");
 		}
-		if (registration != null)
-			sendC2DMRegistrationId(context, registration);
+		if (registration != null) {
+			Thread t = new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					sendC2DMRegistrationId(context, registration);
+				}
+			});
+			t.run();
+		}
 	}
 
 	private void sendC2DMRegistrationId(Context context, String registration) {
