@@ -32,7 +32,7 @@ public class Global {
 
 	public static final String DOMAIN_PROD = "https://bookmarktodesktop.appspot.com";
 	public static final String DOMAIN_DEV = "https://bookmarktodesktopdev.appspot.com";
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	// constants for preferences
 	public static final String USERNAME = "USERNAME";
