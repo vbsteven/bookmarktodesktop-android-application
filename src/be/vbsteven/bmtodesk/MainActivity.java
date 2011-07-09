@@ -101,7 +101,6 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		C2DM.registerToC2DM(this, false);
 	}
 
 	@Override
@@ -111,6 +110,10 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		init();
 		super.onResume();
+
+		if (Global.hasUserCredentials(this) && Global.isPaid(this)) {
+			C2DM.registerToC2DM(this, true);
+		}
 	}
 
 	/**
