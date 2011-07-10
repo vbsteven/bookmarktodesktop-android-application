@@ -154,4 +154,12 @@ public class Global {
 	public static boolean isPaid(Context context) {
 		return Licensing.verify(context);
 	}
+
+	public static boolean hasSeenFreemiumMessage(Context context) {
+		return getPrefs(context).getBoolean("seenfreemiummessage", false);
+	}
+
+	public static void markFreemiumPopupSeen(Context context) {
+		getPrefs(context).edit().putBoolean("seenfreemiummessage", true).commit();
+	}
 }

@@ -18,6 +18,8 @@
 package be.vbsteven.bmtodesk;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -63,11 +65,7 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				String url = "http://market.android.com/details?id=be.vbsteven.bmtodesklicense";
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(Uri.parse(url));
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(i);
+				buyPremium();
 			}
 		});
 
@@ -113,6 +111,10 @@ public class MainActivity extends Activity {
 
 		if (Global.hasUserCredentials(this) && Global.isPaid(this)) {
 			C2DM.registerToC2DM(this, true);
+		}
+
+		if (Global.hasUserCredentials(this) && !Global.hasSeenFreemiumMessage(this)) {
+			showFreemiumMessage();
 		}
 	}
 
@@ -199,4 +201,53 @@ public class MainActivity extends Activity {
 		}
 		return true;
 	}
+
+	private void showFreemiumMessage() {
+		String message = "Bookmark to Desktop uses the freemium model. This means that basic functionality is available in the free version and extended functionality is available if you upgrade your license.\n\n";
+		message += "By buying the premium license from the Android market you are supporting further development and maintenance of this application. The generated income will be used to buy coffee that keeps me awake after my day job so I can work on these projects.\n\n";
+		message += "Features in the free version:\n\n";
+		message += "* Send links from your Android device to the desktop extension\n";
+		message += "* If the browser is open, sent links will be opened immediately (PUSH)\n";
+		message += "* Sent links will be saved to the bookmarktodesktop folder in your bookmarks bar\n";
+		message += "* Request your previously sent links via your own personalized RSS feed\n\n";
+		message += "Extra features for premium users:\n\n";
+		message += "* Send links from the desktop extension to your Android phone\n";
+		message += "* That fuzzy warm feeling you get inside when you realize you supported a developer for the many late night hours he spent working on the application you love";
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Important changes, please read");
+		builder.setMessage(message);
+		builder.setPositiveButton("Buy premium license", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				buyPremium();
+				Global.markFreemiumPopupSeen(MainActivity.this);
+			}
+		});
+		builder.setNegativeButton("Use free version", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Global.markFreemiumPopupSeen(MainActivity.this);
+			}
+		});
+		builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				Global.markFreemiumPopupSeen(MainActivity.this);
+			}
+		});
+		builder.create().show();
+	}
+
+	private void buyPremium() {
+		String url = "http://market.android.com/details?id=be.vbsteven.bmtodesklicense";
+		Intent i = new Intent(Intent.ACTION_VIEW);
+		i.setData(Uri.parse(url));
+		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(i);
+	}
+
 }
